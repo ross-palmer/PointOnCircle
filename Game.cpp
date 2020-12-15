@@ -16,15 +16,24 @@ Game::Game()
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
-	
-	initTankSprites();
 
+	if (!m_timingBarTexture.loadFromFile("./TimingBar.png"))
+	{
+		std::string s("Error loading texture");
+		throw std::exception(s.c_str());
+	}
+
+
+	initTankSprites();
 
 	m_circleShape.setRadius(5);
 	m_circleShape.setFillColor(sf::Color::Red);
 
+	m_rectShape.setSize(sf::Vector2f(TIMING_BAR_WIDTH, 20));	
+	m_rectShape.setPosition(600, 30);
+	m_rectShape.setTexture(&m_timingBarTexture);
 	// Setup the timer to run for 1 second.
-	m_timer.reset(sf::Time(sf::seconds(5.0f)));
+	m_timer.reset(sf::Time(sf::milliseconds(TIMER_DURATION)));
 }
 
 ////////////////////////////////////////////////////////////
@@ -127,7 +136,17 @@ void Game::update(double dt)
 	//  direction vector.
 	if (m_timer.isExpired())
 	{
-		m_circleShape.move(m_startPoint.x, m_startPoint.y);	
+		m_circleShape.move(m_startPoint.x * PROJECTILE_SPEED * (dt / 1000), 
+						   m_startPoint.y * PROJECTILE_SPEED * (dt / 1000));
+	}
+	else if (m_timer.isRunning())
+	{
+		float timeRemainPerCent = m_timer.getRemainingTime().asMilliseconds() / TIMER_DURATION;
+		m_rectShape.setScale(timeRemainPerCent, 1);
+		m_rectShape.setTextureRect(
+			sf::IntRect(0, 0, m_timingBarTexture.getSize().x * timeRemainPerCent, 
+			                  m_timingBarTexture.getSize().y)
+		);
 	}
 }
 
@@ -138,6 +157,7 @@ void Game::render()
 	m_window.draw(m_tankBaseSprite);
 	m_window.draw(m_turretSprite);
 	m_window.draw(m_circleShape);
+	m_window.draw(m_rectShape);
 	m_window.display();
 }
 

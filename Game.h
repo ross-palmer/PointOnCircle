@@ -76,13 +76,24 @@ protected:
 	sf::Texture m_spriteSheetTexture;
 	sf::Texture m_tankBaseTexture;
 	sf::Texture m_turretTexture;
+	sf::Texture m_timingBarTexture;
 	sf::Sprite m_tankBaseSprite;
 	sf::Sprite m_turretSprite;
-	sf::CircleShape m_circleShape;
 
+	// To represent the projectile.
+	sf::CircleShape m_circleShape;
+	// Constant for projectile speed.
+	static constexpr float PROJECTILE_SPEED{ 200.0f };
+
+	// Where to draw the projectile.
 	sf::Vector2f m_startPoint;
 
 	bool m_fireRequest{ false };
 
 	thor::Timer m_timer;
+	static constexpr float TIMER_DURATION = 5000.0f;
+	
+	// A rectangle for the timing bar
+	sf::RectangleShape m_rectShape;
+	static const int TIMING_BAR_WIDTH{ 100 };
 };
