@@ -11,20 +11,23 @@ Game::Game()
 	m_window.setVerticalSyncEnabled(true);
 
 	//loads in the sprite sheet	
-	if (!m_spriteSheetTexture.loadFromFile("./SpriteSheet.png"))
+	if (!m_spriteSheetTexture.loadFromFile("./resources/assets/graphics/SpriteSheet.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
 
-	if (!m_timingBarTexture.loadFromFile("./TimingBar.png"))
+	if (!m_timingBarTexture.loadFromFile("./resources/assets/graphics/TimingBar.png"))
 	{
 		std::string s("Error loading texture");
 		throw std::exception(s.c_str());
 	}
 
+	// Initialise the particle system
+	m_particleSystem.initParticleSystem();
 
 	initTankSprites();
+
 
 	m_circleShape.setRadius(5);
 	m_circleShape.setFillColor(sf::Color::Red);
@@ -104,6 +107,7 @@ void Game::processGameEvents(sf::Event& event)
 ////////////////////////////////////////////////////////////
 void Game::update(double dt)
 {	
+	m_particleSystem.update(dt);
 	// If space has been pressed (fire request)
 	if (m_fireRequest)
 	{
@@ -126,11 +130,18 @@ void Game::update(double dt)
 			turretPos.x + 1 * std::cos(rotation * MathUtility::DEG_TO_RAD),
 			turretPos.y + 1 * std::sin(rotation * MathUtility::DEG_TO_RAD)
 		);
+
 		m_circleShape.setPosition(m_startPoint);
+		
 		// Class Exercise: Why does the commented line below not work?
 		//m_startPoint = thor::unitVector(m_startPoint);
 		m_startPoint = thor::unitVector(m_startPoint - m_turretSprite.getPosition());
 		m_fireRequest = false;
+
+		// Generate some particles
+		m_particleSystem.generateParticles(m_turretSprite.getPosition().x + m_startPoint.x * TURRET_LENGTH, 
+			                               m_turretSprite.getPosition().y + m_startPoint.y * TURRET_LENGTH);
+
 	}
 	// If the timer has elapsed, start translating the circle along the 
 	//  direction vector.
@@ -158,6 +169,7 @@ void Game::render()
 	m_window.draw(m_turretSprite);
 	m_window.draw(m_circleShape);
 	m_window.draw(m_rectShape);
+	m_particleSystem.render(m_window);
 	m_window.display();
 }
 
@@ -180,7 +192,6 @@ void Game::initTankSprites()
 	m_turretSprite.setPosition(400, 400);
 
 }
-
 
 
 

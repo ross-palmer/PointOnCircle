@@ -22,10 +22,12 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MathUtility.cpp" />
+    <ClCompile Include="ParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
     <ClInclude Include="MathUtility.h" />
+    <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="ScreenSize.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

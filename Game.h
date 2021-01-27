@@ -1,9 +1,11 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include "ScreenSize.h"
 #include "MathUtility.h"
 #include "Thor/Time.hpp"
+#include "ParticleSystem.h"
 
 /// <summary>
 /// @author RP
@@ -69,9 +71,11 @@ protected:
 	void processGameEvents(sf::Event&);
 
 	void initTankSprites();
-
 	// main window
 	sf::RenderWindow m_window;
+
+	// Custom particleSystem 
+	ParticleSystem m_particleSystem;
 
 	sf::Texture m_spriteSheetTexture;
 	sf::Texture m_tankBaseTexture;
@@ -91,7 +95,10 @@ protected:
 	bool m_fireRequest{ false };
 
 	thor::Timer m_timer;
-	static constexpr float TIMER_DURATION = 5000.0f;
+	static constexpr float TIMER_DURATION = 1000.0f;
+
+	// Approx. length of turret
+	static const int TURRET_LENGTH = 50;
 	
 	// A rectangle for the timing bar
 	sf::RectangleShape m_rectShape;
