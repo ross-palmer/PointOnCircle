@@ -115,14 +115,12 @@ protected:
 	// Vision cone vector...initially points along the x axis.
 	sf::Vector2f m_visionConeDir{ 1, 0 };
 
-	// Vision cone visualisation...vision cone has
-	//  both a start point and an end point
-	sf::Vector2f m_visionConeLeft[2];
+	// Vision cone visualisation...vision cone origin
+	sf::Vector2f m_visionConeLeft;
 
-	sf::Vector2f m_visionConeRight[2];
+	sf::Vector2f m_visionConeRight;
 
 	thor::Arrow m_arrowLeft;
-
 	thor::Arrow m_arrowRight;
 
 	// Vision Cone max length.

@@ -200,17 +200,17 @@ void Game::initTankSprites()
 
 void Game::setVisionCone(float t_angle)
 {
-	m_visionConeLeft[0] = m_turretSprite.getPosition();	
-	m_visionConeRight[0] = m_turretSprite.getPosition();
+	m_visionConeLeft = m_turretSprite.getPosition();	
+	m_visionConeRight = m_turretSprite.getPosition();
 
 	// Setup the arrow visualisation
-	m_arrowLeft.setStyle(thor::Arrow::Style::Line);
+	m_arrowLeft.setStyle(thor::Arrow::Style::Forward);
 	m_arrowLeft.setColor(sf::Color::Green);
-	m_arrowLeft.setPosition(m_visionConeLeft[0]);
+	m_arrowLeft.setPosition(m_visionConeLeft);
 	m_arrowRight.setStyle(thor::Arrow::Style::Line);
 	m_arrowRight.setColor(sf::Color::Green);
-	m_arrowRight.setPosition(m_visionConeRight[0]);
-
+	m_arrowRight.setPosition(m_visionConeRight);
+	                                                                    
 	m_arrowLeft.setDirection(VISION_CONE_LENGTH * thor::rotatedVector(m_visionConeDir, -t_angle));
 	m_arrowRight.setDirection(VISION_CONE_LENGTH * thor::rotatedVector(m_visionConeDir, t_angle));
 	
