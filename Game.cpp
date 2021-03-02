@@ -37,6 +37,9 @@ Game::Game()
 	m_rectShape.setTexture(&m_timingBarTexture);
 	// Setup the timer to run for 1 second.
 	m_timer.reset(sf::Time(sf::milliseconds(TIMER_DURATION)));
+
+	// Setup the vision cone with 30 degrees field of view.
+	setVisionCone(30.0f);
 }
 
 ////////////////////////////////////////////////////////////
@@ -169,6 +172,8 @@ void Game::render()
 	m_window.draw(m_turretSprite);
 	m_window.draw(m_circleShape);
 	m_window.draw(m_rectShape);
+	m_window.draw(m_arrowLeft);
+	m_window.draw(m_arrowRight);
 	m_particleSystem.render(m_window);
 	m_window.display();
 }
@@ -193,5 +198,22 @@ void Game::initTankSprites()
 
 }
 
+void Game::setVisionCone(float t_angle)
+{
+	m_visionConeLeft[0] = m_turretSprite.getPosition();	
+	m_visionConeRight[0] = m_turretSprite.getPosition();
 
+	// Setup the arrow visualisation
+	m_arrowLeft.setStyle(thor::Arrow::Style::Line);
+	m_arrowLeft.setColor(sf::Color::Green);
+	m_arrowLeft.setPosition(m_visionConeLeft[0]);
+	m_arrowRight.setStyle(thor::Arrow::Style::Line);
+	m_arrowRight.setColor(sf::Color::Green);
+	m_arrowRight.setPosition(m_visionConeRight[0]);
+
+	m_arrowLeft.setDirection(VISION_CONE_LENGTH * thor::rotatedVector(m_visionConeDir, -t_angle));
+	m_arrowRight.setDirection(VISION_CONE_LENGTH * thor::rotatedVector(m_visionConeDir, t_angle));
+	
+
+}
 

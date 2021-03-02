@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <Thor/Shapes.hpp>
 
 #include "ScreenSize.h"
 #include "MathUtility.h"
@@ -71,6 +72,13 @@ protected:
 	void processGameEvents(sf::Event&);
 
 	void initTankSprites();
+
+	/// <summary>
+	/// @brief Helper function to configure vision cone 
+	/// </summary>
+	/// <param name="t_angle">The vision cone width in degrees</param>
+	void setVisionCone(float t_angle);
+
 	// main window
 	sf::RenderWindow m_window;
 
@@ -103,4 +111,21 @@ protected:
 	// A rectangle for the timing bar
 	sf::RectangleShape m_rectShape;
 	static const int TIMING_BAR_WIDTH{ 100 };
+
+	// Vision cone vector...initially points along the x axis.
+	sf::Vector2f m_visionConeDir{ 1, 0 };
+
+	// Vision cone visualisation...vision cone has
+	//  both a start point and an end point
+	sf::Vector2f m_visionConeLeft[2];
+
+	sf::Vector2f m_visionConeRight[2];
+
+	thor::Arrow m_arrowLeft;
+
+	thor::Arrow m_arrowRight;
+
+	// Vision Cone max length.
+	static constexpr float VISION_CONE_LENGTH{ 200.0f };
+
 };
