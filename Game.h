@@ -10,13 +10,13 @@
 
 /// <summary>
 /// @author RP
-/// @date September 2020
+/// @date March 2021
 /// @version 1.0
 /// 
 /// </summary>
-
 /// <summary>
 /// @brief Main class for the SFML Playground project.
+/// 
 /// 
 /// This will be a single class framework for learning about SFML. 
 /// Example usage:
