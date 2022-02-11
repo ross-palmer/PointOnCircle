@@ -1,4 +1,4 @@
-#include "MathUtility.h"
+﻿#include "MathUtility.h"
 
 namespace MathUtility
 {
@@ -27,4 +27,26 @@ namespace MathUtility
 		return v;
 	}
 
+	////////////////////////////////////////////////////////////
+	float checkProjection(sf::Vector2f t_v1, sf::Vector2f t_v2)
+	{
+		t_v1 = thor::unitVector(t_v1);
+		t_v2 = thor::unitVector(t_v2);
+		return thor::dotProduct(t_v1, t_v2);
+	}
+
+	bool inFieldOfView(float t_fieldOfView, sf::Vector2f t_dirFacing, sf::Vector2f t_dirToTarget)
+	{		
+		t_dirToTarget = thor::unitVector(t_dirToTarget);
+		// θ = acos(AB)
+		float angle = thor::toDegree(std::acos(t_dirFacing.x * t_dirToTarget.x + t_dirFacing.y * t_dirToTarget.y));
+		if (angle < (t_fieldOfView / 2.0f))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }

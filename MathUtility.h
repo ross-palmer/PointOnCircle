@@ -35,4 +35,11 @@ namespace MathUtility
 	/// <returns>A vector whose length is not longer than the specified maximum.</returns>
 	sf::Vector2f truncate(sf::Vector2f v, float const max);
 
+
+	////////////////////////////////////////////////////////////
+	float checkProjection(sf::Vector2f t_v1, sf::Vector2f t_v2);
+
+	////////////////////////////////////////////////////////////
+	bool inFieldOfView(float t_fieldOfView, sf::Vector2f t_dirFacing, sf::Vector2f t_dirToTarget);
+
 }

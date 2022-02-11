@@ -40,6 +40,8 @@ Game::Game()
 
 	// Setup the vision cone with 30 degrees field of view.
 	setVisionCone(30.0f);
+
+	m_circleShape.setPosition(500, 300);
 }
 
 ////////////////////////////////////////////////////////////
@@ -92,6 +94,22 @@ void Game::processGameEvents(sf::Event& event)
 		case sf::Keyboard::Escape:
 			m_window.close();
 			break;
+		case sf::Keyboard::W:
+			m_circleShape.move(0, -1);
+			break;
+		case sf::Keyboard::A:
+			m_circleShape.move(-1, 0);
+			break;
+		case sf::Keyboard::S:
+			m_circleShape.move(0, 1);
+			break;
+		case sf::Keyboard::R:
+			m_circleShape.setPosition(500, 300);
+			m_timer.reset(sf::Time(sf::milliseconds(TIMER_DURATION)));
+			break;
+		case sf::Keyboard::D:
+			m_circleShape.move(1, 0);
+			break;
 		case sf::Keyboard::Right:
 			m_turretSprite.rotate(1.0f);
 			break;
@@ -110,6 +128,22 @@ void Game::processGameEvents(sf::Event& event)
 ////////////////////////////////////////////////////////////
 void Game::update(double dt)
 {	
+	// Is the circle inside the vision cone
+	// Taking the perspective from the vision cone end, looking towards the tank
+	// If the circle is left of the left line and right of the right line, it is inside the cone.?
+	bool leftOfLeftLine = isLeft(m_visionConeLeftEnd, m_visionConeLeft, m_circleShape.getPosition());
+	bool rightOfRightLine = isRight(m_visionConeRightEnd, m_visionConeRight, m_circleShape.getPosition());
+	
+	if (leftOfLeftLine && rightOfRightLine)
+	{
+		m_circleShape.setFillColor(sf::Color::Green);
+	}
+	else
+	{
+		m_circleShape.setFillColor(sf::Color::Red);
+	}
+
+
 	m_particleSystem.update(dt);
 	// If space has been pressed (fire request)
 	if (m_fireRequest)
@@ -204,16 +238,42 @@ void Game::setVisionCone(float t_angle)
 	m_visionConeRight = m_turretSprite.getPosition();
 
 	// Setup the arrow visualisation
-	m_arrowLeft.setStyle(thor::Arrow::Style::Forward);
+	m_arrowLeft.setStyle(thor::Arrow::Style::Line);
 	m_arrowLeft.setColor(sf::Color::Green);
 	m_arrowLeft.setPosition(m_visionConeLeft);
 	m_arrowRight.setStyle(thor::Arrow::Style::Line);
 	m_arrowRight.setColor(sf::Color::Green);
 	m_arrowRight.setPosition(m_visionConeRight);
-	                                                                    
-	m_arrowLeft.setDirection(VISION_CONE_LENGTH * thor::rotatedVector(m_visionConeDir, -t_angle));
-	m_arrowRight.setDirection(VISION_CONE_LENGTH * thor::rotatedVector(m_visionConeDir, t_angle));
-	
+	      
+	// Calculate the vector that points along the left side of the vision cone.
+	sf::Vector2f visionConeDirLeft = VISION_CONE_LENGTH * thor::rotatedVector(m_visionConeDir, -t_angle);
+	// Calculate the vector that points along the right side of the vision cone.
+	sf::Vector2f visionConeDirRight = VISION_CONE_LENGTH * thor::rotatedVector(m_visionConeDir, t_angle);
+
+	// Get the end point of the left vector.
+	m_visionConeLeftEnd = sf::Vector2f(m_visionConeLeft.x + visionConeDirLeft.x, m_visionConeLeft.y + visionConeDirLeft.y);
+	// Get the end point of the right vector.
+	m_visionConeRightEnd = sf::Vector2f(m_visionConeRight.x + visionConeDirRight.x, m_visionConeRight.y + visionConeDirRight.y);
+
+	// Setup the thor arrow to visualise
+	m_arrowLeft.setDirection(visionConeDirLeft);
+	m_arrowRight.setDirection(visionConeDirRight);
 
 }
 
+bool Game::isRight(sf::Vector2f t_linePoint1, sf::Vector2f t_linePoint2, sf::Vector2f t_point) const
+{
+	return (
+		(t_linePoint2.x - t_linePoint1.x) * (t_point.y - t_linePoint1.y) -
+		(t_linePoint2.y - t_linePoint1.y) * (t_point.x - t_linePoint1.x)
+		) > 0;
+}
+
+
+bool Game::isLeft(sf::Vector2f t_linePoint1, sf::Vector2f t_linePoint2, sf::Vector2f t_point) const
+{
+	return (
+		(t_linePoint2.x - t_linePoint1.x) * (t_point.y - t_linePoint1.y) -
+		(t_linePoint2.y - t_linePoint1.y) * (t_point.x - t_linePoint1.x)
+		) < 0;
+}

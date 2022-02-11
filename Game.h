@@ -45,6 +45,9 @@ public:
 	/// </summary>
 	void run();
 
+	bool isLeft(sf::Vector2f t_linePoint1, sf::Vector2f t_linePoint2, sf::Vector2f t_point) const;
+	bool isRight(sf::Vector2f t_linePoint1, sf::Vector2f t_linePoint2, sf::Vector2f t_point) const;
+
 protected:
 	/// <summary>
 	/// @brief Placeholder to perform updates to all game objects.
@@ -103,7 +106,7 @@ protected:
 	bool m_fireRequest{ false };
 
 	thor::Timer m_timer;
-	static constexpr float TIMER_DURATION = 1000.0f;
+	static constexpr float TIMER_DURATION = 500.0f;
 
 	// Approx. length of turret
 	static const int TURRET_LENGTH = 50;
@@ -117,8 +120,12 @@ protected:
 
 	// Vision cone visualisation...vision cone origin
 	sf::Vector2f m_visionConeLeft;
+	// End point of left line
+	sf::Vector2f m_visionConeLeftEnd;
 
 	sf::Vector2f m_visionConeRight;
+	// End point of right line
+	sf::Vector2f m_visionConeRightEnd;
 
 	thor::Arrow m_arrowLeft;
 	thor::Arrow m_arrowRight;
